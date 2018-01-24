@@ -14,8 +14,8 @@ Django Regex
 
 Fields and utilities to work with regular expression in Django
 
-Content
--------
+Components
+----------
 
 RegexField
 ~~~~~~~~~~
@@ -43,6 +43,7 @@ list that matches content against valid regular expressions
     'a' in rules  # False
 
 
+
 Links
 ~~~~~
 
@@ -51,14 +52,14 @@ Links
 +--------------------+----------------+--------------+----------------------------+
 | Development        | |dev-build|    | |dev-cov|    |                            |
 +--------------------+----------------+--------------+----------------------------+
-| Project home page: |https://github.com/saxix/django-regex             |
-+--------------------+---------------+--------------------------------------------+
-| Issue tracker:     |https://github.com/saxix/django-regex/issues?sort |
-+--------------------+---------------+--------------------------------------------+
-| Download:          |http://pypi.python.org/pypi/django-regex/         |
-+--------------------+---------------+--------------------------------------------+
-| Documentation:     |https://django-regex.readthedocs.org/en/latest/   |
-+--------------------+---------------+--------------+-----------------------------+
+| Project home page: |https://github.com/saxix/django-regex                       |
++--------------------+------------------------------------------------------------+
+| Issue tracker:     |https://github.com/saxix/django-regex/issues?sort           |
++--------------------+------------------------------------------------------------+
+| Download:          |http://pypi.python.org/pypi/django-regex/                   |
++--------------------+------------------------------------------------------------+
+| Documentation:     |https://django-regex.readthedocs.org/en/latest/             |
++--------------------+------------------------------------------------------------+
 
 .. |master-build| image:: https://secure.travis-ci.org/saxix/django-regex.png?branch=master
     :target: http://travis-ci.org/saxix/django-regex/
