@@ -58,8 +58,7 @@ Links
 +--------------------+------------------------------------------------------------+
 | Download:          |http://pypi.python.org/pypi/django-regex/                   |
 +--------------------+------------------------------------------------------------+
-| Documentation:     |https://django-regex.readthedocs.org/en/latest/             |
-+--------------------+------------------------------------------------------------+
+
 
 .. |master-build| image:: https://secure.travis-ci.org/saxix/django-regex.png?branch=master
     :target: http://travis-ci.org/saxix/django-regex/
