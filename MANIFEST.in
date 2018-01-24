@@ -1,0 +1,20 @@
+include README.rst
+include CHANGES
+include LICENSE
+include MANIFEST.in
+include setup.cfg
+include *.py
+
+exclude Makefile
+exclude tox.ini
+exclude .github
+
+recursive-exclude src *.in
+recursive-exclude .github *
+
+recursive-include tests *.coveragerc
+recursive-include tests *.py
+
+recursive-include docs *
+recursive-include src/requirements *.pip
+recursive-include src/django_regex *
