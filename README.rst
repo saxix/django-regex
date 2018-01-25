@@ -24,7 +24,7 @@ RegexField
 .. code-block:: python
 
     class DemoModel(models.Model):
-        regex = RegexField()
+        regex = RegexField(flags=re.I)
 
 
     o = DemoModel.objects.create(regex='^1$')

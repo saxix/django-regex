@@ -3,6 +3,7 @@ import re
 from django import forms
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
+
 from django_regex.forms import RegexFormField
 
 from .exceptions import InvalidPatternValidationError
