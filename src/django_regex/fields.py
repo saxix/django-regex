@@ -3,9 +3,6 @@ import re
 from django import forms
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
-from django.utils.deconstruct import deconstructible
-from django.utils.translation import gettext_lazy as _
-
 from django_regex.forms import RegexFormField
 
 from .exceptions import InvalidPatternValidationError
@@ -43,9 +40,10 @@ class RegexField(models.Field):
     form_class = RegexFormField
     widget = forms.Textarea
 
-    # def __init__(self, *args, **kwargs):
-    #     super(RegexField, self).__init__(*args, **kwargs)
-    #     self.validators.append(RegexValidator)
+    def __init__(self, *args, **kwargs):
+        self.flags = kwargs.pop('flags', 0)
+        super(RegexField, self).__init__(*args, **kwargs)
+        # self.validators.append(RegexValidator)
 
     def contribute_to_class(self, cls, name, private_only=False, virtual_only=NOT_PROVIDED):
         self.set_attributes_from_name(name)
@@ -64,7 +62,7 @@ class RegexField(models.Field):
         if value is None:
             return None
         try:
-            return re.compile(value)
+            return re.compile(value, self.flags)
         except Exception:
             raise InvalidPatternValidationError("%s is not a valid regular expression" % value)
 
