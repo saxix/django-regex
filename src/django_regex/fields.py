@@ -3,6 +3,8 @@ import re
 from django import forms
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
+from django.utils.deconstruct import deconstructible
+from django.utils.translation import gettext_lazy as _
 
 from django_regex.forms import RegexFormField
 

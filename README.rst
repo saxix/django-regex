@@ -19,7 +19,8 @@ Components
 
 RegexField
 ~~~~~~~~~~
- Django field to store regular expressions
+
+Django field to store regular expressions
 
 .. code-block:: python
 
