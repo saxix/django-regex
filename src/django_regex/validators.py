@@ -6,14 +6,12 @@ import re
 
 import six
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 
-from .exceptions import InvalidPatternValidationError
-
 logger = logging.getLogger(__name__)
 
-# # flags
 FLAGS = {
     'I': re.IGNORECASE,
     'M': re.MULTILINE,
@@ -102,11 +100,13 @@ def value_to_flags(value):
 
 @deconstructible
 class RegexValidator(object):
-    message = _('Enter a valid regular expression pattern')
+    message = _("`%(pattern)s` is not a valid regular expression")
     code = 'regex'
 
     def __call__(self, value):
         try:
             re.compile(value)
         except Exception:
-            raise InvalidPatternValidationError(self.message, code=self.code)
+            raise ValidationError(self.message,
+                                  code=self.code,
+                                  params={'pattern': value})

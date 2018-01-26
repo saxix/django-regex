@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import re
-
 from django.forms import modelform_factory
 
 from demo.models import DemoModel1, DemoModel2
@@ -49,7 +47,9 @@ def test_save(db):
 def test_render_field(db, demomodel):
     Form = modelform_factory(DemoModel1, fields=['regex'])
     form = Form(instance=demomodel)
-    assert form.as_p() == '<p><label for="id_regex">Regex:</label> <input type="text" name="regex" value=".*" required id="id_regex" /></p>'
+    rendered = form.as_p()
+    assert 'value=".*"' in rendered
+    assert 'required' in rendered
 
 
 def test_render(db, demomodel):

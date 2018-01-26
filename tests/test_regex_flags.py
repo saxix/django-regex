@@ -50,6 +50,7 @@ def test_flags_humanized():
     o = DemoModel2.objects.create(regex=compress(['aa', 'i']))
     o.regex.match('AA')
 
+
 def test_flagsfield():
     f = RegexFlagsField()
     assert isinstance(f.formfield(), RegexFlagsFormField)

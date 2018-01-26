@@ -4,8 +4,6 @@ import sys
 
 import pytest
 
-from django_regex.validators import compress
-
 
 def pytest_configure(config):
     here = os.path.dirname(__file__)
@@ -33,4 +31,4 @@ def demomodel(db):
 @pytest.fixture
 def demomodel2(db):
     from demo.factories import DemoModel2Factory
-    return DemoModel2Factory(regex=re.compile('^$', re.I+re.M), name='name')
+    return DemoModel2Factory(regex=re.compile('^$', re.I + re.M), name='name')

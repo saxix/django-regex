@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
-from django import forms
 from django.contrib.admin import ModelAdmin, register
-from django.forms.utils import ErrorList
 
 from .models import DemoModel1, DemoModel2
 

@@ -41,3 +41,4 @@ class RegexList(list):
             if m and m.group():
                 return True
         return False
+

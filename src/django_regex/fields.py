@@ -1,10 +1,10 @@
 import re
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
-
-from .exceptions import InvalidPatternValidationError
+from django.utils.translation import ugettext_lazy as _
 from .forms import RegexFlagsFormField, RegexFormField
 from .validators import Regex, RegexValidator, compress, decompress
 
@@ -59,7 +59,8 @@ class RegexField(models.Field):
         try:
             return re.compile(pattern, flags)
         except Exception:
-            raise InvalidPatternValidationError("`%s` is not a valid regular expression" % pattern)
+            raise ValidationError(_("`%(pattern)s` is not a valid regular expression"),
+                                  params={'pattern': pattern})
 
     def pre_save(self, model_instance, add):
         value = getattr(model_instance, self.attname)

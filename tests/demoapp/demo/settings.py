@@ -1,3 +1,10 @@
+import os
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.join(HERE, os.pardir, os.pardir, os.pardir)
+SRC_DIR = os.path.join(BASE_DIR, 'src')
+PACKAGE_DIR = os.path.join(SRC_DIR, 'django_regex')
+
 DEBUG = True
 STATIC_URL = '/static/'
 
@@ -26,6 +33,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware']
+
+LOCALE_PATHS = (
+    os.path.join(PACKAGE_DIR, "locale"),
+)
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------

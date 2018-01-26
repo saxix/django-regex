@@ -5,13 +5,11 @@ import logging
 
 import six
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import CheckboxSelectMultiple
-from django.utils.translation import gettext_lazy as _
 
-from .exceptions import InvalidPatternValidationError
-from .validators import (
-    OPTIONS, Regex, RegexValidator, compress, decompress, flags_to_value
-)
+from .validators import (OPTIONS, Regex, RegexValidator,
+                         compress, decompress, flags_to_value)
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +22,7 @@ class RegexFormField(forms.CharField):
 
     def validate(self, value):
         if value in self.empty_values and self.required:
-            raise InvalidPatternValidationError(self.error_messages['required'], code='required')
+            raise ValidationError(self.error_messages['required'], code='required')
 
     def prepare_value(self, value):
         if value is None:
@@ -36,11 +34,7 @@ class RegexFormField(forms.CharField):
 
     def to_python(self, value):
         """Return a string."""
-        # if value is None:
-        #     return None
-        # if isinstance(value, six.string_types):
         return value
-        # return value.pattern
 
 
 class RegexFlagsWidget(forms.MultiWidget):
@@ -55,29 +49,17 @@ class RegexFlagsWidget(forms.MultiWidget):
 
 
 class FlagsInput(CheckboxSelectMultiple):
-    template_name = 'django_regex/widgets/flag.html'
+    template_name = 'django_regex/widgets/flags.html'
 
 
 class FlagsField(forms.MultipleChoiceField):
     pass
 
 
-# class OptionFormField(forms.CharField):
-#     def __init__(self, *args, **kwargs):
-#         kwargs['max_length'] = len(FLAGS)
-#         super(OptionFormField, self).__init__(*args, **kwargs)
-#         self.validators.append(OptionValidator())
-#
-
-
 class RegexFlagsFormField(forms.MultiValueField):
     """
     Form field that validates credit card expiry dates.
     """
-
-    default_error_messages = {
-        'invalid_regex': _(u'Please enter a valid regular expression.'),
-    }
 
     def __init__(self, *args, **kwargs):
         error_messages = self.default_error_messages.copy()
@@ -87,7 +69,8 @@ class RegexFlagsFormField(forms.MultiValueField):
         if 'error_messages' in kwargs:  # pragma: no cover
             error_messages.update(kwargs['error_messages'])
         fields = (
-            RegexFormField(error_messages={'invalid': error_messages['invalid_regex']}),
+            # RegexFormField(error_messages={'invalid': error_messages['invalid_regex']}),
+            RegexFormField(required=kwargs['required']),
             FlagsField(required=False,
                        choices=OPTIONS,
                        widget=FlagsInput)
@@ -96,7 +79,7 @@ class RegexFlagsFormField(forms.MultiValueField):
         self.widget = RegexFlagsWidget(widgets=[fields[0].widget,
                                                 fields[1].widget,
                                                 ])
-        # self.validators.append(RegexValidatorEnh())
+        self.validators.append(RegexValidator())
 
     def compress(self, data_list):
         return compress(data_list, self.flags_separator)
@@ -105,17 +88,6 @@ class RegexFlagsFormField(forms.MultiValueField):
         out = value
         if isinstance(value, Regex):
             out = compress([value.pattern, value.flags], self.flags_separator)
-        #     if value == [None,None]:
-        #         value = ['', '']
         if isinstance(value, list):
             out = compress(value, self.flags_separator)
         return out
-
-    # def to_python(self, value):
-    #     return value
-    #     """Return a string."""
-    #     if value is None:
-    #         return None
-    #     if isinstance(value, six.string_types):
-    #         return value
-    #     return value.pattern

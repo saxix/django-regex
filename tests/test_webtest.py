@@ -39,6 +39,7 @@ def test_admin_change_flags(django_app, admin_user, demomodel2):
     else:
         assert demomodel2.regex.flags == 0
 
+
 @pytest.mark.django_db
 def test_admin_change_flags_none(django_app, admin_user, demomodel2):
     change_url = reverse('admin:demo_demomodel2_change', args=[demomodel2.pk])

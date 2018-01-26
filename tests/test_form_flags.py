@@ -3,11 +3,11 @@ from __future__ import absolute_import, unicode_literals
 
 import re
 
+import six
 from django.forms import modelform_factory
 
 from demo.models import DemoModel2
 from django_regex.forms import RegexFlagsFormField
-from django_regex.validators import compress
 
 
 def test_validate_fail():
@@ -50,9 +50,10 @@ def test_save(db):
 def test_render_field(db, demomodel2):
     Form = modelform_factory(DemoModel2, fields=['regex'])
     form = Form(instance=demomodel2)
-    assert 'name="regex_0" value="^$"' in form.as_p()
-    assert 'id="id_regex_1_0" checked' in form.as_p()
-    assert 'id="id_regex_1_1" checked' in form.as_p()
+    rendered = form.as_p()
+    m = re.findall(' checked ', rendered)
+    assert len(m) == 3, rendered
+    assert 'name="regex_0" value="^$"' in rendered, rendered
 
 
 def test_render(db, demomodel):
