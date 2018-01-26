@@ -46,6 +46,12 @@ def test_save(db):
     assert obj.regex.match('aaa')
 
 
+def test_render_field(db, demomodel):
+    Form = modelform_factory(DemoModel1, fields=['regex'])
+    form = Form(instance=demomodel)
+    assert form.as_p() == '<p><label for="id_regex">Regex:</label> <input type="text" name="regex" value=".*" required id="id_regex" /></p>'
+
+
 def test_render(db, demomodel):
     Form = modelform_factory(DemoModel1, exclude=())
     data = {'name': 'name', 'regex': 'aaa'}
@@ -71,10 +77,9 @@ def test_instance(db, demomodel):
     assert obj.regex == demomodel.regex
 
 
-def test_unexpected():
-    # FIXME: Not sure why this should be tested
+####
+####
 
-    Form = modelform_factory(DemoModel1, exclude=())
-    data = {'name': 'name', 'regex': re.compile('.*')}
-    form = Form(data=data)
-    assert form.is_valid()
+def aaaa():
+    field = RegexFormField()
+    assert field.clean('aaa')

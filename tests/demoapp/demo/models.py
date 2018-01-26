@@ -5,7 +5,7 @@ import logging
 
 from django.db import models
 
-from django_regex.fields import RegexField
+from django_regex.fields import RegexField, RegexFlagsField
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,13 @@ class DemoModel1(models.Model):
 
     class Meta:
         ordering = ("id",)
+        app_label = 'demo'
 
 
 class DemoModel2(models.Model):
     name = models.CharField(max_length=100)
-    regex = RegexField(null=True, blank=True)
+    regex = RegexFlagsField(null=True, blank=True)
 
     class Meta:
         ordering = ("id",)
+        app_label = 'demo'

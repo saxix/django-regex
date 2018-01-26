@@ -1,7 +1,10 @@
 import os
+import re
 import sys
 
 import pytest
+
+from django_regex.validators import compress
 
 
 def pytest_configure(config):
@@ -25,3 +28,9 @@ def client(request):
 def demomodel(db):
     from demo.factories import DemoModelFactory
     return DemoModelFactory(regex='.*', name='name')
+
+
+@pytest.fixture
+def demomodel2(db):
+    from demo.factories import DemoModel2Factory
+    return DemoModel2Factory(regex=re.compile('^$', re.I+re.M), name='name')

@@ -2,7 +2,7 @@ Release 0.2 (dev)
 -----------------
 
 * add 'flags' argument
-
+* new `RegexFlagsField`
 
 
 Release 0.1

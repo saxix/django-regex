@@ -2,16 +2,16 @@
 from __future__ import absolute_import, unicode_literals
 
 import logging
-import re
 
 import six
 from django import forms
-from django.db.models import TextField
-from django.forms import Textarea
+from django.forms import CheckboxSelectMultiple
 from django.utils.translation import gettext_lazy as _
 
-from .validators import RegexValidator, RegexValidatorEnh, OptionValidator, FLAGS
 from .exceptions import InvalidPatternValidationError
+from .validators import (
+    OPTIONS, Regex, RegexValidator, compress, decompress, flags_to_value
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,91 +36,86 @@ class RegexFormField(forms.CharField):
 
     def to_python(self, value):
         """Return a string."""
-        if value is None:
-            return None
-        if isinstance(value, six.string_types):
-            return value
-        return value.pattern
+        # if value is None:
+        #     return None
+        # if isinstance(value, six.string_types):
+        return value
+        # return value.pattern
 
 
-SEP = chr(0)
+class RegexFlagsWidget(forms.MultiWidget):
+    template_name = 'django_regex/widgets/regex.html'
 
-
-def compress(data_list):
-    if data_list:
-        return SEP.join(data_list)
-
-
-def decompress(value):
-    if value:
-        return value.split(chr(0))
-    return [None, None]
-
-def get_options(value):
-    ret = 0
-    if 'I' in value:
-        ret += re.IGNORECASE
-    if 'M' in value:
-        ret += re.MULTILINE
-    if 'D' in value:
-        ret += re.DOTALL
-    if 'V' in value:
-        ret += re.VERBOSE
-    return ret
-
-
-class RegexWidgetEnh(forms.MultiWidget):
-    """
-    Widget containing two select boxes for selecting the month and year.
-    """
-    template_name = 'django/forms/widgets/multiwidget.html'
+    def __init__(self, widgets, attrs=None):
+        super(RegexFlagsWidget, self).__init__(widgets, attrs)
 
     def decompress(self, value):
-        return decompress(value)
+        pattern, flags = decompress(value)
+        return pattern, flags_to_value(flags)
 
 
-class OptionFormField(forms.CharField):
-    def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = len(FLAGS)
-        super(OptionFormField, self).__init__(*args, **kwargs)
-        self.validators.append(OptionValidator())
+class FlagsInput(CheckboxSelectMultiple):
+    template_name = 'django_regex/widgets/flag.html'
 
-class RegexFormFieldEnh(forms.MultiValueField):
+
+class FlagsField(forms.MultipleChoiceField):
+    pass
+
+
+# class OptionFormField(forms.CharField):
+#     def __init__(self, *args, **kwargs):
+#         kwargs['max_length'] = len(FLAGS)
+#         super(OptionFormField, self).__init__(*args, **kwargs)
+#         self.validators.append(OptionValidator())
+#
+
+
+class RegexFlagsFormField(forms.MultiValueField):
     """
     Form field that validates credit card expiry dates.
     """
 
     default_error_messages = {
         'invalid_regex': _(u'Please enter a valid regular expression.'),
-        'invalid_year': _(u'Please enter a valid year.'),
-        'date_passed': _(u'This expiry date has passed.'),
     }
 
     def __init__(self, *args, **kwargs):
         error_messages = self.default_error_messages.copy()
-        if 'error_messages' in kwargs:
-            error_messages.update(kwargs['error_messages'])
-        if 'initial' not in kwargs:
-            pass
-        fields = (
-            forms.CharField(widget=Textarea,
-                            error_messages={'invalid': error_messages['invalid_regex']}),
-            OptionFormField(),
-            # forms.BooleanField(label='ignore_case'),
-            # forms.BooleanField(label='make anchors look for newline'),
-        )
-        super(RegexFormFieldEnh, self).__init__(fields, *args, **kwargs)
-        self.widget = RegexWidgetEnh(widgets=[fields[0].widget,
-                                              fields[1].widget,
-                                              # fields[2].widget
-                                              ])
-        self.validators.append(RegexValidatorEnh())
+        kwargs['require_all_fields'] = False
+        self.flags_separator = kwargs.pop('flags_separator', None)
 
-    # def clean(self, value):
-    #     expiry_date = super(RegexFormFieldEnh, self).clean(value)
-    #     if date.today() > expiry_date:
-    #         raise forms.ValidationError(self.error_messages['date_passed'])
-    #     return expiry_date
+        if 'error_messages' in kwargs:  # pragma: no cover
+            error_messages.update(kwargs['error_messages'])
+        fields = (
+            RegexFormField(error_messages={'invalid': error_messages['invalid_regex']}),
+            FlagsField(required=False,
+                       choices=OPTIONS,
+                       widget=FlagsInput)
+        )
+        super(RegexFlagsFormField, self).__init__(fields, *args, **kwargs)
+        self.widget = RegexFlagsWidget(widgets=[fields[0].widget,
+                                                fields[1].widget,
+                                                ])
+        # self.validators.append(RegexValidatorEnh())
 
     def compress(self, data_list):
-        return compress(data_list)
+        return compress(data_list, self.flags_separator)
+
+    def prepare_value(self, value):
+        out = value
+        if isinstance(value, Regex):
+            out = compress([value.pattern, value.flags], self.flags_separator)
+        #     if value == [None,None]:
+        #         value = ['', '']
+        if isinstance(value, list):
+            out = compress(value, self.flags_separator)
+        return out
+
+    # def to_python(self, value):
+    #     return value
+    #     """Return a string."""
+    #     if value is None:
+    #         return None
+    #     if isinstance(value, six.string_types):
+    #         return value
+    #     return value.pattern

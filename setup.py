@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import os
-import imp
 import codecs
-from setuptools import setup, find_packages
+import imp
+import os
+
+from setuptools import find_packages, setup
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 init = os.path.join(ROOT, 'src', 'django_regex', '__init__.py')
