@@ -55,7 +55,7 @@ class AdminRegexHelperMixin(ExtraUrlMixin):
                         self.message_user(request, "Regex updated")
                         return None
 
-                except Exception as e:
+                except Exception as e:  # pragma: no cover
                     self.message_user(request, str(e), messages.ERROR)
         else:
             form = TestRegexForm(initial={'regex': target.regex})
