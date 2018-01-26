@@ -92,10 +92,7 @@ def value_to_flags(value):
     if isinstance(value, six.string_types):
         value = [FLAGS[x.upper()] for x in value if x.upper() in FLAGS]
 
-    if isinstance(value, (list, tuple)):
-        return sum(map(int, value))
-
-    return 0
+    return sum(map(int, value))
 
 
 @deconstructible

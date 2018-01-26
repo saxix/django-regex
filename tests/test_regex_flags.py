@@ -14,6 +14,7 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.mark.parametrize("value", [(re.I, re.M, re.DOTALL, re.U, re.VERBOSE),
+                                   [2, 8, 16, 32, 64],
                                    'imsuv'
                                    ]
                          )
