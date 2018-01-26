@@ -5,8 +5,8 @@ import logging
 
 import six
 from django import forms
-from django.core.exceptions import ValidationError
 from django.forms import CheckboxSelectMultiple
+from django.utils.translation import gettext_lazy as _
 
 from .validators import (OPTIONS, Regex, RegexValidator,
                          compress, decompress, flags_to_value)
@@ -15,14 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 class RegexFormField(forms.CharField):
+    # widget = forms.Textarea
 
     def __init__(self, *args, **kwargs):
         super(RegexFormField, self).__init__(*args, **kwargs)
         self.validators.append(RegexValidator())
-
-    def validate(self, value):
-        if value in self.empty_values and self.required:
-            raise ValidationError(self.error_messages['required'], code='required')
 
     def prepare_value(self, value):
         if value is None:
@@ -37,8 +34,13 @@ class RegexFormField(forms.CharField):
         return value
 
 
+class RegexTextField(forms.Textarea):
+    pass
+
+
 class RegexFlagsWidget(forms.MultiWidget):
     template_name = 'django_regex/widgets/regex.html'
+    widget = forms.Textarea
 
     def __init__(self, widgets, attrs=None):
         super(RegexFlagsWidget, self).__init__(widgets, attrs)
@@ -60,17 +62,22 @@ class RegexFlagsFormField(forms.MultiValueField):
     """
     Form field that validates credit card expiry dates.
     """
+    default_error_messages = {
+        'invalid': _('Enter a list of values.'),
+        'incomplete': _('Enter a complete value.'),
+        'invalid_regex': ''}
 
     def __init__(self, *args, **kwargs):
         error_messages = self.default_error_messages.copy()
         kwargs['require_all_fields'] = False
         self.flags_separator = kwargs.pop('flags_separator', None)
-
+        # self.regex_widget = kwargs.pop('widget', forms.Textarea)
+        # w = kwargs.get('widget', RegexFormField)
         if 'error_messages' in kwargs:  # pragma: no cover
             error_messages.update(kwargs['error_messages'])
         fields = (
-            # RegexFormField(error_messages={'invalid': error_messages['invalid_regex']}),
-            RegexFormField(required=kwargs['required']),
+            RegexFormField(widget=kwargs.get('widget', forms.Textarea),
+                           error_messages={'invalid': error_messages['invalid_regex']}),
             FlagsField(required=False,
                        choices=OPTIONS,
                        widget=FlagsInput)

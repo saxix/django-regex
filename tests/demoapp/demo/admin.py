@@ -3,6 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from django.contrib.admin import ModelAdmin, register
 
+from django_regex.admin_helper import AdminRegexHelperMixin
 from .models import DemoModel1, DemoModel2
 
 
@@ -12,11 +13,13 @@ class DemoAdmin1(ModelAdmin):
 
 
 @register(DemoModel2)
-class DemoAdmin2(ModelAdmin):
+class DemoAdmin2(AdminRegexHelperMixin, ModelAdmin):
     list_display = ('name', 'regex', 'pattern', 'flags')
 
     def pattern(self, obj):
-        return obj.regex.pattern
+        if obj.regex:
+            return obj.regex.pattern
 
     def flags(self, obj):
-        return obj.regex.flags
+        if obj.regex:
+            return obj.regex.flags

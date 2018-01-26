@@ -27,7 +27,7 @@ class RegexFieldDescriptor(object):
 class RegexField(models.Field):
     descriptor = RegexFieldDescriptor
     form_class = RegexFormField
-    widget = forms.Textarea
+    widget = forms.TextInput
 
     def __init__(self, *args, **kwargs):
         self.flags_separator = kwargs.pop('flags_separator', None)
@@ -76,7 +76,7 @@ class RegexField(models.Field):
         return self.value_from_object(obj).pattern
 
     def formfield(self, form_class=None, choices_form_class=None, **kwargs):
-        # kwargs['widget'] = self.widget
+        kwargs['widget'] = self.widget
         return super(RegexField, self).formfield(self.form_class,
                                                  choices_form_class, **kwargs)
 

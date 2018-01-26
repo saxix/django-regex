@@ -52,7 +52,10 @@ def test_render_field(db, demomodel2):
     form = Form(instance=demomodel2)
     rendered = form.as_p()
     m = re.findall(' checked ', rendered)
-    assert len(m) == 3, rendered
+    if six.PY3:
+        assert len(m) == 4, rendered
+    else:
+        assert len(m) == 3, rendered
     assert 'name="regex_0" value="^$"' in rendered, rendered
 
 

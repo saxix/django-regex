@@ -1,3 +1,4 @@
+admin-extra-urls==1.7
 apipkg==1.4               # via execnet
 attrs==17.4.0             # via pytest
 beautifulsoup4==4.6.0     # via webtest
@@ -22,7 +23,7 @@ pytest-pep8==1.0.6
 pytest-pythonpath==0.7.1
 pytest==3.3.2
 python-dateutil==2.6.1    # via faker
-six==1.11.0               # via faker, pytest, python-dateutil, tox, webtest
+six==1.11.0               # via admin-extra-urls, faker, pytest, python-dateutil, tox, webtest
 text-unidecode==1.1       # via faker
 tox==2.9.1
 virtualenv==15.1.0        # via tox

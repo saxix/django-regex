@@ -35,6 +35,7 @@ setup(
     extras_require={
         'dev': dev_requires,
         'tests': tests_requires,
+        'extra': ['admin-extra-urls',]
     },
     platforms=['linux'],
     classifiers=[
