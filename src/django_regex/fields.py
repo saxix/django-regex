@@ -52,6 +52,7 @@ class RegexField(models.Field):
             return value
         try:
             pattern, flags = decompress(value, self.flags_separator)
+            flags = flags or self.flags
         except ValueError:
             pass
         if not pattern:
@@ -83,6 +84,24 @@ class RegexField(models.Field):
 
 class RegexFlagsField(RegexField):
     form_class = RegexFlagsFormField
+
+    def to_python(self, value):
+        if not value:
+            return None
+        pattern, flags = value, self.flags
+        if isinstance(value, Regex):
+            return value
+        try:
+            pattern, flags = decompress(value, self.flags_separator)
+        except ValueError:
+            pass
+        if not pattern:
+            return None
+        try:
+            return re.compile(pattern, flags)
+        except Exception:
+            raise ValidationError(_("`%(pattern)s` is not a valid regular expression"),
+                                  params={'pattern': pattern})
 
     def pre_save(self, model_instance, add):
         value = getattr(model_instance, self.attname)
