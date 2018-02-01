@@ -1,6 +1,10 @@
+Release 0.2.1
+-------------
+* fixes default flags setting
+
+
 Release 0.2
 -----------
-
 * add 'flags' argument
 * new `RegexFlagsField`
 * new "test regex" admin page
@@ -8,5 +12,4 @@ Release 0.2
 
 Release 0.1
 -----------
-
 * Initial release
