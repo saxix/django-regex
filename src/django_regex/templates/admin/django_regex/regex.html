@@ -14,10 +14,12 @@
     <div class="breadcrumbs">
         <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
         &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+        {% if target %}
         &rsaquo; {% if has_change_permission %}
         <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}
         {{ opts.verbose_name_plural|capfirst }}{% endif %}
         &rsaquo; <a href="{% url opts|admin_urlname:'change' object.id %}">{{ target }}</a>
+        {% endif %}
         &rsaquo; Test Regular Expression
     </div>
 {% endblock breadcrumbs %}
