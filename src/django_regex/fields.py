@@ -1,29 +1,15 @@
 import re
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
-from django.utils.deconstruct import deconstructible
-from django.utils.translation import gettext_lazy as _
-
-from django_regex.forms import RegexFormField
-
-from .exceptions import InvalidPatternValidationError
+from django.utils.translation import ugettext_lazy as _
+from .forms import RegexFlagsFormField, RegexFormField
+from .validators import Regex, RegexValidator, compress, decompress
 
 rex = re.compile('')
 
-
-# @deconstructible
-# class RegexValidator(object):
-#     message = _('Enter a valid regular expression pattern')
-#     code = 'regex'
-#
-#     def __call__(self, value):
-#         try:
-#             re.compile(value)
-#         except Exception:
-#             raise InvalidPatternValidationError(self.message, code=self.code)
-#
 
 class RegexFieldDescriptor(object):
     def __init__(self, field):
@@ -41,11 +27,13 @@ class RegexFieldDescriptor(object):
 class RegexField(models.Field):
     descriptor = RegexFieldDescriptor
     form_class = RegexFormField
-    widget = forms.Textarea
+    widget = forms.TextInput
 
-    # def __init__(self, *args, **kwargs):
-    #     super(RegexField, self).__init__(*args, **kwargs)
-    #     self.validators.append(RegexValidator)
+    def __init__(self, *args, **kwargs):
+        self.flags_separator = kwargs.pop('flags_separator', None)
+        self.flags = kwargs.pop('flags', 0)
+        super(RegexField, self).__init__(*args, **kwargs)
+        self.validators.append(RegexValidator)
 
     def contribute_to_class(self, cls, name, private_only=False, virtual_only=NOT_PROVIDED):
         self.set_attributes_from_name(name)
@@ -56,25 +44,28 @@ class RegexField(models.Field):
     def get_internal_type(self):
         return 'TextField'
 
-    def deconstruct(self):
-        name, path, args, kwargs = super(RegexField, self).deconstruct()
-        return name, path, args, kwargs
-
     def to_python(self, value):
-        if value is None:
+        if not value:
+            return None
+        pattern, flags = value, self.flags
+        if isinstance(value, Regex):
+            return value
+        try:
+            pattern, flags = decompress(value, self.flags_separator)
+        except ValueError:
+            pass
+        if not pattern:
             return None
         try:
-            return re.compile(value)
+            return re.compile(pattern, flags)
         except Exception:
-            raise InvalidPatternValidationError("%s is not a valid regular expression" % value)
+            raise ValidationError(_("`%(pattern)s` is not a valid regular expression"),
+                                  params={'pattern': pattern})
 
     def pre_save(self, model_instance, add):
         value = getattr(model_instance, self.attname)
-        if value is None:
+        if not value:  # pragma: no cover
             return None
-        # if isinstance(value, str):
-        #     return value
-        # else:
         return value.pattern
 
     def value_to_string(self, obj):
@@ -86,4 +77,15 @@ class RegexField(models.Field):
 
     def formfield(self, form_class=None, choices_form_class=None, **kwargs):
         kwargs['widget'] = self.widget
-        return super(RegexField, self).formfield(RegexFormField, choices_form_class, **kwargs)
+        return super(RegexField, self).formfield(self.form_class,
+                                                 choices_form_class, **kwargs)
+
+
+class RegexFlagsField(RegexField):
+    form_class = RegexFlagsFormField
+
+    def pre_save(self, model_instance, add):
+        value = getattr(model_instance, self.attname)
+        if not value:
+            return None
+        return compress([value.pattern, value.flags])

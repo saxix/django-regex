@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import re
-
 from django.forms import modelform_factory
 
 from demo.models import DemoModel1, DemoModel2
 from django_regex.forms import RegexFormField
+from django_regex.fields import RegexField
 
 
 def test_validate_fail():
@@ -46,6 +45,15 @@ def test_save(db):
     assert obj.regex.match('aaa')
 
 
+def test_render_field(db, demomodel):
+    Form = modelform_factory(DemoModel1, fields=['regex'],
+                             field_classes={RegexField: RegexFormField})
+    form = Form(instance=demomodel)
+    rendered = form.as_p()
+    assert 'value=".*"' in rendered
+    assert 'required' in rendered
+
+
 def test_render(db, demomodel):
     Form = modelform_factory(DemoModel1, exclude=())
     data = {'name': 'name', 'regex': 'aaa'}
@@ -71,10 +79,9 @@ def test_instance(db, demomodel):
     assert obj.regex == demomodel.regex
 
 
-def test_unexpected():
-    # FIXME: Not sure why this should be tested
+####
+####
 
-    Form = modelform_factory(DemoModel1, exclude=())
-    data = {'name': 'name', 'regex': re.compile('.*')}
-    form = Form(data=data)
-    assert form.is_valid()
+def aaaa():
+    field = RegexFormField()
+    assert field.clean('aaa')

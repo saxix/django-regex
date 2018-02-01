@@ -1,0 +1,49 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-26 03:38-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/django_regex/fields.py:62 src/django_regex/validators.py:104
+#, fuzzy, python-format
+#| msgid "Please enter a valid regular expression."
+msgid "`%(pattern)s` is not a valid regular expression"
+msgstr "`%(pattern)s` non è una espressione regolare valida"
+
+#: src/django_regex/forms.py:78
+msgid "Please enter a valid regular expression."
+msgstr "Per favore inserisci un'espressione regolare valida."
+
+#: src/django_regex/validators.py:26
+msgid "ignore case (IGNORECASE)"
+msgstr "ignore maiuscole/minuscole (IGNORECASE)"
+
+#: src/django_regex/validators.py:27
+msgid "make anchors look for newline (MULTILINE)"
+msgstr "Cerca la corrispondenza nelle linee attraverso ^ e $"
+
+#: src/django_regex/validators.py:28
+msgid "assume current 8-bit locale (LOCALE)"
+msgstr "Cerca la corrispondenza usando le impostazioni locali"
+
+#: src/django_regex/validators.py:29
+msgid "make dot match newline (DOTALL)"
+msgstr "Interpreta `.` (punto) come qualsiasi carattere, includendo i fine riga"
+
+#: src/django_regex/validators.py:31
+msgid "ignore whitespace and comments (VERBOSE)"
+msgstr "Ignora spazi e commenti"

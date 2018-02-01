@@ -19,16 +19,55 @@ Components
 
 RegexField
 ~~~~~~~~~~
- Django field to store regular expressions
+
+Django field to store regular expressions
 
 .. code-block:: python
 
     class DemoModel(models.Model):
-        regex = RegexField()
+        regex = RegexField(flags=re.I)
 
 
     o = DemoModel.objects.create(regex='^1$')
     o.regex.match('1')
+
+RegexFlagsField
+~~~~~~~~~~~~~~~
+
+As RegexField but allows to set compilation flags (see: https://docs.python.org/2/howto/regex.html#compilation-flags)
+It is rendered with proper widget
+
+.. code-block:: python
+
+    from django_regex.validators import compress
+    import re
+
+    class DemoModel(models.Model):
+        regex = RegexFlagsField()
+
+    o = DemoModel.objects.create(regex=compress(['aa', re.I]))
+    o.regex.match('AA')
+
+    o = DemoModel.objects.create(regex=compress(['aa', 'i'])) # use human shortcuts
+    o.regex.match('AA')
+
+
+RegexFlagsField stores pattern and flags in the same db column as string in the format
+`<regex.pattern><separator><regex.flags>`
+
+separator is `chr(0)` can be customized using settings `DJANGO_REGEX_SEPARATOR`
+or per each field using `flags_separator` argument.
+
+.. code-block:: python
+
+    from django_regex.validators import compress
+    import re
+
+    class DemoModel(models.Model):
+        regex = RegexFlagsField(flags_separator='/')
+
+    o = DemoModel.objects.create(regex='aa/i')
+    o.regex.match('AA')
 
 
 RegexList

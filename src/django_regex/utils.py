@@ -10,31 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class RegexList(list):
-    """
-        list class where each entry is a valid regular expression
-
-    >>> r = RegexList(["a.*"])
-    >>> r.append("[0-9]*")
-    >>> "1" in r
-    True
-
-    >>> "cc" in r
-    False
-
-    >>> "abc" in r
-    True
-
-    >>> print(r)
-    [u'a.*', u'[0-9]*']
-
-    >>> r[0] = '.*'
-
-    >>> r[0] = '[0-'
-    Traceback (most recent call last):
-        ...
-    InvalidPattern: [0- is not a valid regular expression
-    """
-
     def __init__(self, seq=None):
         regexx = []
         if seq:
@@ -66,3 +41,4 @@ class RegexList(list):
             if m and m.group():
                 return True
         return False
+

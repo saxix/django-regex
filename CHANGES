@@ -1,3 +1,11 @@
+Release 0.2
+-----------
+
+* add 'flags' argument
+* new `RegexFlagsField`
+* new "test regex" admin page
+
+
 Release 0.1
 -----------
 
