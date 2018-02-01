@@ -32,7 +32,7 @@ OPTIONS = (
 
 Regex = type(re.compile(''))
 
-DEFAULT_SEPARATOR = getattr(settings, 'DJANGO_REGEX_SEPARATOR', chr(0))
+DEFAULT_SEPARATOR = getattr(settings, 'DJANGO_REGEX_SEPARATOR', chr(1))
 
 
 def compress(data_list, separator=None):
@@ -50,7 +50,10 @@ def decompress(value, separator=None):
     if isinstance(value, Regex):
         return value.pattern, value_to_flags(value.flags)
 
-    pattern, flags = value.split(sep)
+    try:
+        pattern, flags = value.split(sep)
+    except ValueError:
+        return value, 0
     return pattern, value_to_flags(flags)
 
 

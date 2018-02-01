@@ -10,7 +10,7 @@ from django.template.response import TemplateResponse
 
 from admin_extra_urls.extras import ExtraUrlMixin, action
 from django_regex.forms import RegexFlagsFormField
-from django_regex.validators import decompress
+from django_regex.validators import decompress, compress
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +28,10 @@ class AdminRegexHelperMixin(ExtraUrlMixin):
     @action(label='Test Regex')
     def test_regex(self, request, id):
         target = self.get_object(request, id)
+        text = request.GET.get('text', '')
         context = {'target': target,
-                   'opts': target._meta,
+                   'opts': self.model._meta,
                    'object': target,
-                   'app_label': target._meta.app_label,
                    }
         if request.method == 'POST':
             form = TestRegexForm(request.POST)
@@ -58,6 +58,7 @@ class AdminRegexHelperMixin(ExtraUrlMixin):
                 except Exception as e:  # pragma: no cover
                     self.message_user(request, str(e), messages.ERROR)
         else:
-            form = TestRegexForm(initial={'regex': target.regex})
+            form = TestRegexForm(initial={'regex': target.regex.pattern,
+                                          'text': text})
         context['form'] = form
         return TemplateResponse(request, 'admin/django_regex/regex.html', context)
