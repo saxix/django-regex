@@ -51,7 +51,7 @@ def test_render_field(db, demomodel2):
     Form = modelform_factory(DemoModel2, fields=['regex'])
     form = Form(instance=demomodel2)
     rendered = form.as_p()
-    m = re.findall(' checked ', rendered)
+    m = re.findall(' checked', rendered)
     if six.PY3:
         assert len(m) == 4, rendered
     else:
