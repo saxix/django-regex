@@ -1,13 +1,21 @@
 #!/usr/bin/env python
+import ast
 import codecs
-import imp
 import os
 
+import re
 from setuptools import find_packages, setup
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 init = os.path.join(ROOT, 'src', 'django_regex', '__init__.py')
-app = imp.load_source('django_regex', init)
+
+_version_re = re.compile(r'__version__\s+=\s+(.*)')
+_name_re = re.compile(r'NAME\s+=\s+(.*)')
+
+with open(init, 'rb') as f:
+    content = f.read().decode('utf-8')
+    version = str(ast.literal_eval(_version_re.search(content).group(1)))
+    name = str(ast.literal_eval(_name_re.search(content).group(1)))
 
 
 def read(*parts):
@@ -20,8 +28,8 @@ install_requires = read('src/requirements/install.pip')
 dev_requires = read('src/requirements/develop.pip')
 
 setup(
-    name=app.NAME,
-    version=app.VERSION,
+    name=name,
+    version=version,
     url='https://github.com/saxix/django-regex',
     author='Stefano Apostolico',
     author_email='s.apostolico@gmail.com',
@@ -35,16 +43,17 @@ setup(
     extras_require={
         'dev': dev_requires,
         'tests': tests_requires,
-        'extra': ['admin-extra-urls',]
+        'test': tests_requires,
+        'extra': ['admin-extra-urls', ]
     },
     platforms=['linux'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django',
-        'Framework :: Django :: 1.9',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',

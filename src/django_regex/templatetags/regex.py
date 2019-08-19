@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 from django import template
 
 register = template.Library()
@@ -11,5 +9,3 @@ def inspect(match, obj=None, target=None):
     """Converts a string into all lowercase"""
     return {'groups': match.groups,
             }
-
-

@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import logging
 
-import six
 from django import forms
 from django.forms import CheckboxSelectMultiple
 from django.utils.translation import gettext_lazy as _
 
-from .validators import (OPTIONS, Regex, RegexValidator,
-                         compress, decompress, flags_to_value)
+from django_regex.utils import flags_to_value
+
+from .validators import OPTIONS, Regex, RegexValidator, compress, decompress
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +21,7 @@ class RegexFormField(forms.CharField):
     def prepare_value(self, value):
         if value is None:
             return None
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
 
         return value.pattern

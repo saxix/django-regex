@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import logging
 import re
 
+from admin_extra_urls.extras import ExtraUrlMixin, action
 from django import forms
 from django.contrib import messages
 from django.template.response import TemplateResponse
 
-from admin_extra_urls.extras import ExtraUrlMixin, action
 from django_regex.forms import RegexFlagsFormField
-from django_regex.validators import decompress, compress
+from django_regex.validators import decompress
 
 logger = logging.getLogger(__name__)
 
