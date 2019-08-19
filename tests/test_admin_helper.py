@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from django.urls import reverse
 
@@ -11,7 +13,10 @@ def test_checker_success(django_app, admin_user, demomodel2):
     res.form['text'] = '123'
     res = res.form.submit()
     assert res.status_code == 200
-    assert "SRE_Match" in str(res.content)
+    if sys.version_info[:2] == (3, 6):
+        assert "SRE_Match" in str(res.content)
+    elif sys.version_info[:2] == (3, 7):
+        assert "re.Match" in str(res.content)
 
 
 @pytest.mark.django_db
@@ -23,7 +28,7 @@ def test_checker_error(django_app, admin_user, demomodel2):
     res.form['text'] = '123'
     res = res.form.submit()
     assert res.status_code == 200
-    assert"SRE_Match" not in str(res.content)
+    assert "SRE_Match" not in str(res.content)
 
 
 @pytest.mark.django_db

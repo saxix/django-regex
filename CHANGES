@@ -3,6 +3,7 @@ Release 0.4
 * add support Django 2.2
 * new perl parser module
 * drops support python 2.x
+* add python 3.7 support
 
 
 Release 0.3
