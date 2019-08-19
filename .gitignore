@@ -20,3 +20,5 @@ pytest.xml
 ~*
 .project
 .pydevproject
+Pipfile
+Pipfile.lock

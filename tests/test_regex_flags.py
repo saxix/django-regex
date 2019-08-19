@@ -8,7 +8,8 @@ import pytest
 from demo.models import DemoModel2
 from django_regex.fields import RegexField, RegexFlagsField
 from django_regex.forms import RegexFlagsFormField
-from django_regex.validators import flags_to_value, value_to_flags, compress
+from django_regex.validators import compress
+from django_regex.utils import value_to_flags, flags_to_value
 
 pytestmark = pytest.mark.django_db
 

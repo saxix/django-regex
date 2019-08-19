@@ -14,13 +14,20 @@ Django Regex
 
 Fields and utilities to work with regular expression in Django
 
+The Django regex field provides custom fields and utilities for a Django model that stores a regex.
+This provides the ability to easily store regex patterns and access them as compiled regular
+expressions from your models.
+
+Patterns can be expressed in perl syntax to set regex flags.
+
+
 Components
 ----------
 
 RegexField
 ~~~~~~~~~~
 
-Django field to store regular expressions
+Django fields to store regular expressions
 
 .. code-block:: python
 

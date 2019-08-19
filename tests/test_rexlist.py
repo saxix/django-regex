@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import re
 import sys
 
 import pytest
 
+from django_regex import perl
 from django_regex.exceptions import InvalidPattern
 from django_regex.utils import RegexList
 
@@ -53,3 +55,17 @@ def test_repr():
         assert str(rules) == "[u'.*', u'[0-9]*']"
     elif sys.version_info[0] == 3:
         assert str(rules) == "['.*', '[0-9]*']"
+
+
+def test_init_rex():
+    rules = RegexList([perl.compile('/^abc$/i')])
+    assert 'ABC' in rules
+    assert 'a' not in rules
+
+
+def test_append_rex():
+    rules = RegexList()
+    rules.append(re.compile('^abc$'))
+    assert 'abc' in rules
+    assert 'a' not in rules
+

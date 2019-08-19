@@ -14,8 +14,8 @@ PATTERNS = [('/.*/', re.compile('.*')),
             ('/\//im', re.compile('/', re.IGNORECASE | re.MULTILINE)),
             ('|.*|i', re.compile('.*', re.IGNORECASE)),
             ('|path/to/file/|i', re.compile('path/to/file/', re.IGNORECASE)),
-            ('|a\|b|i', re.compile('a|b', re.IGNORECASE)),
-            ('/(a|b)/i', re.compile('(a|b)', re.IGNORECASE)),
+            ('|[ab]|i', re.compile('[ab]', re.IGNORECASE)),
+            ('/(aa|bb)/i', re.compile('(aa|bb)', re.IGNORECASE)),
             ]
 
 
