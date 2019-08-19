@@ -93,4 +93,3 @@ def value_to_flags(value):
         value = [FLAGS[x.upper()] for x in value if x.upper() in FLAGS]
 
     return sum(map(int, value))
-

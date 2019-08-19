@@ -9,5 +9,3 @@ def inspect(match, obj=None, target=None):
     """Converts a string into all lowercase"""
     return {'groups': match.groups,
             }
-
-

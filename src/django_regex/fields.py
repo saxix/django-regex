@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
 from django.utils.translation import ugettext_lazy as _
+
 from .forms import RegexFlagsFormField, RegexFormField
 from .validators import Regex, RegexValidator, compress, decompress
 

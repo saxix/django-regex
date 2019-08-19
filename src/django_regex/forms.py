@@ -5,8 +5,8 @@ from django.forms import CheckboxSelectMultiple
 from django.utils.translation import gettext_lazy as _
 
 from django_regex.utils import flags_to_value
-from .validators import (OPTIONS, Regex, RegexValidator,
-                         compress, decompress)
+
+from .validators import OPTIONS, Regex, RegexValidator, compress, decompress
 
 logger = logging.getLogger(__name__)
 

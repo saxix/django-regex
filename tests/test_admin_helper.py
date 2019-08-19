@@ -23,7 +23,7 @@ def test_checker_error(django_app, admin_user, demomodel2):
     res.form['text'] = '123'
     res = res.form.submit()
     assert res.status_code == 200
-    assert not "SRE_Match" in str(res.content)
+    assert"SRE_Match" not in str(res.content)
 
 
 @pytest.mark.django_db
@@ -35,7 +35,7 @@ def test_checker_fail(django_app, admin_user, demomodel2):
     res.form['text'] = '1'
     res = res.form.submit()
     assert res.status_code == 200
-    assert not "SRE_Match" in str(res.content)
+    assert "SRE_Match" not in str(res.content)
 
 
 @pytest.mark.django_db
