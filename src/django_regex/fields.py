@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields import NOT_PROVIDED
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .forms import RegexFlagsFormField, RegexFormField
 from .validators import Regex, RegexValidator, compress, decompress
@@ -81,6 +81,15 @@ class RegexField(models.Field):
         kwargs['widget'] = self.widget
         return super(RegexField, self).formfield(self.form_class,
                                                  choices_form_class, **kwargs)
+
+    def value_from_object(self, obj):
+        """Return the value of this field in the given model instance."""
+        return getattr(obj, self.attname)
+
+    def get_prep_value(self, value):
+        if isinstance(value, Regex):
+            return value.pattern
+        return value
 
 
 class RegexFlagsField(RegexField):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 
-from factory import DjangoModelFactory
+from factory.django import DjangoModelFactory
 
 
 class DemoModelFactory(DjangoModelFactory):
